@@ -1,0 +1,26 @@
+---
+name: Rebase Onto Upstream
+
+on:
+  repository_dispatch:
+    types:
+      - "on-demand-check"
+
+jobs:
+  follow-upstream:
+    name: Follow upstream repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+      - name: rebase upstream
+        uses: zxaos/patchup@master
+        with:
+          conflict_reviewers: "zxaos"
+          local_branch: local-conflict
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_repo: "zxaos/rebase-onto-test"
+          target_tag: test-local-conflict
